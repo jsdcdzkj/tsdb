@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>列表页</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <meta name="keywords" content="列表页">
+    <meta name="description" content="列表页">
+    <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../css/materialdesignicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../js/jconfirm/jquery-confirm.min.css">
+    <link href="../../../css/style.min.css" rel="stylesheet">
+
+    <!-- layui Css-->
+    <link rel="stylesheet" href="../../../js/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../js/layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="../../../js/layuiadmin/style/css.css" media="all">
+</head>
+
+<body>
+    <div class="container-fluid p-t-15">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>筛选条件</h4>
+                        <!-- <ul class="card-actions1">
+                            <li><a class="btn btn-info m-r-5 btn-xs" href="javascript:;"><i
+                                        class="mdi mdi-account-search"></i> 查询</a></li>
+                            <li><a class="btn btn-default m-r-5 btn-xs" href="javascript:;"><i
+                                        class="mdi mdi-refresh"></i> 重置</a></li>
+
+                        </ul> -->
+                    </div>
+                    <div class="card-body">
+                        <form class="form-inline" action="index.html" method="post" onsubmit="return false;">
+                            
+                            <div class="form-group m-r-5">
+                                <label for="example-if-email">角色名称：</label>
+                                <input class="form-control input-sm" type="text" placeholder="角色名称">
+                            </div>                          
+                                              
+                            <div class="form-group">
+                                <button class="btn btn-info btn-sm" type="submit"><i
+                                        class="mdi mdi-account-search"></i>查询</button>
+                                <button class="btn btn-default btn-sm" type="button"><i
+                                        class="mdi mdi-refresh"></i>重置</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>角色管理列表</h4>
+                        <ul class="card-actions1">                           
+                            <li><a class="btn btn-success m-r-5 btn-xs" href="javascript:;" onclick="add()"><i
+                                        class="mdi mdi-plus"></i> 添加</a></li>
+
+                        </ul>
+                    </div>
+                    <div class="card-body">
+
+                        <table class="layui-hide" id="test-table-height" lay-filter="table-toolbar"></table>
+                        <script type="text/html" id="table-toolbar">
+                           <a class="btn btn-info btn-xs" lay-event="edit"><i class="mdi mdi-pencil"></i>编辑</a>                             
+                           <a class="btn btn-danger btn-xs" lay-event="del"><i class="mdi mdi-delete"></i>删除</a>                                    
+            </script>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript" src="../../../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../../js/bootstrap.min.js"></script>
+    <!--对话框-->
+    <script src="../../../js/jconfirm/jquery-confirm.min.js"></script>
+    <!--消息提示-->
+    <script src="../../../js/bootstrap-notify.min.js"></script>
+    <script type="text/javascript" src="../../../js/lightyear.js"></script>
+    <script type="text/javascript" src="../../../js/main.min.js"></script>
+
+    <script src="../../../js/layuiadmin/layui/layui.js"></script>
+    <script src="../../../js/layuiadmin/common.js"></script>
+    <script type="text/javascript">
+        layui.config({
+            base: '../../../js/layuiadmin/' //静态资源所在路径
+        }).use(['index', 'table', 'laydate'], function () {
+            var admin = layui.admin
+                , laydate = layui.laydate
+                , table = layui.table;
+
+            table.render({
+                elem: '#test-table-height'
+                , url: layui.setter.base + 'json/table/demo.js'
+                , height: 'full-350'
+                , cellMinWidth: 80
+                , page: true
+                , limit: 30
+                , cols: [[
+                   { field: 'id', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true, align: 'center' }
+                    , { field: 'username', title: '角色名称', align: 'left', width: 140 }                   
+                    , { field: 'city', title: '描述', align: 'left' } 
+                    , { fixed: 'right', title: '操作', toolbar: '#table-toolbar', width: 160, align: 'center' }
+                ]]
+                , page: true
+            });           
+
+            //监听行工具事件
+            table.on('tool(table-toolbar)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'del') {
+                    // var iframeObj = $(window.frameElement).attr('name');
+                    // page("新增", "add.html", iframeObj, "520", "500");
+                    // location.href='single.html'
+                    $.confirm({
+                        title: '提醒',
+                        content: '确认删除吗？',
+                        type: 'red',
+                        buttons: {
+                            omg: {
+                                text: '确认',
+                                btnClass: 'btn-red',
+                                action: function () {
+                                    // $.alert('你点击了确认!');
+                                    // var loading = layer.load('备份中...', {
+                                    //     icon: 16, shade: [0.8, '#000'] //0.1透明度的白色背景
+                                    // });
+                                    // setTimeout(function (data) {
+                                    //     //最后数据加载完 让 loading层消失
+                                    //     layer.close(loading);
+                                    // }, 5000);
+
+
+                                    lightyear.loading('show');
+                                    // 假设ajax提交操作
+                                    setTimeout(function () {
+                                        lightyear.loading('hide');
+                                        lightyear.notify('删除成功，页面即将自动跳转~', 'success', 5000);
+                                    }, 1e3)
+                                }
+                            },
+                            close: {
+                                text: '取消',
+                            }
+                        }
+                    });
+                }else if(obj.event === 'edit'){
+                    var iframeObj = $(window.frameElement).attr('name');
+                    page("编辑", "add.html", iframeObj, "520", "600");
+                }
+            });
+
+        });
+        function add() {
+            var iframeObj = $(window.frameElement).attr('name');
+            page("新增", "add.html", iframeObj, "520", "600");
+        }   
+    </script>
+</body>
+
+</html>

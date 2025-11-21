@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>列表页</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <meta name="keywords" content="列表页">
+    <meta name="description" content="列表页">
+    <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../css/materialdesignicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../js/jconfirm/jquery-confirm.min.css">
+    <link href="../../../css/style.min.css" rel="stylesheet">
+
+    <!-- layui Css-->
+    <link rel="stylesheet" href="../../../js/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../js/layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="../../../js/layuiadmin/style/css.css" media="all">
+</head>
+
+<body>
+    <div class="container-fluid p-t-15">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>筛选条件</h4>
+                        <!-- <ul class="card-actions1">
+                            <li><a class="btn btn-info m-r-5 btn-xs" href="javascript:;"><i
+                                        class="mdi mdi-account-search"></i> 查询</a></li>
+                            <li><a class="btn btn-default m-r-5 btn-xs" href="javascript:;"><i
+                                        class="mdi mdi-refresh"></i> 重置</a></li>
+
+                        </ul> -->
+                    </div>
+                    <div class="card-body">
+                        <form class="form-inline" action="index.html" method="post" onsubmit="return false;">
+                            <div class="form-group m-r-5">
+                                <label for="example-if-email">庭审编号：</label>
+                                <input class="form-control input-sm" type="text" placeholder="请输入庭审编号..">
+                            </div>
+                            <div class="form-group m-r-5">
+                                <label for="example-if-password">案件名称：</label>
+                                <input class="form-control input-sm" type="text" placeholder="请输入案件名称..">
+                            </div>
+                            <div class="form-group m-r-5">
+                                <label for="example-if-password">案件类型：</label>
+                                <select class="form-control input-sm" id="example-select" name="example-select"
+                                    size="1">
+                                    <option value="0">请选择案件类型</option>
+                                    <option value="1">刑事案件</option>
+                                    <option value="2">民事案件</option>
+                                    <option value="3">执行案件</option>
+                                </select>
+                            </div>
+                            <div class="form-group m-r-5">
+                                <label for="example-if-password">承办部门：</label>
+                                <select class="form-control input-sm" id="example-select" name="example-select"
+                                    size="1">
+                                    <option value="0">请选择承办部门</option>
+                                    <option value="1">执行局</option>
+                                    <option value="2">民事审判庭</option>
+                                    <option value="3">刑事审判庭</option>
+                                </select>
+                            </div>
+                            <div class="form-group m-r-5">
+                                <label for="example-if-password">庭审时间：</label>
+                                <input class="form-control input-sm" type="text" readonly id="time1">
+                            </div>
+                            <div class="form-group m-r-5">
+                                <label for="example-if-password">立案时间：</label>
+                                <input class="form-control input-sm" type="text" readonly id="time2">
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-info btn-sm" type="submit"><i
+                                        class="mdi mdi-account-search"></i>查询</button>
+                                <button class="btn btn-default btn-sm" type="button"><i
+                                        class="mdi mdi-refresh"></i>重置</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>总体数据统计列表</h4>
+                        <ul class="card-actions1">
+                            <li><a class="btn btn-primary m-r-5 btn-xs" href="javascript:;" onclick="daochu()"><i
+                                        class="mdi mdi-file-export"></i> 导出</a></li>                            
+
+                        </ul>
+                    </div>
+                    <div class="card-body">
+
+                        <table class="layui-hide" id="test-table-height" lay-filter="table-toolbar"></table>
+                        <script type="text/html" id="table-toolbar">
+                           <a class="btn btn-info btn-xs" lay-event="edit">点播</a> 
+                           <a class="btn btn-info btn-xs" lay-event="views">下载</a>                                      
+                        </script>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript" src="../../../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../../js/bootstrap.min.js"></script>
+    <!--对话框-->
+    <script src="../../../js/jconfirm/jquery-confirm.min.js"></script>
+    <!--消息提示-->
+    <script src="../../../js/bootstrap-notify.min.js"></script>
+    <script type="text/javascript" src="../../../js/lightyear.js"></script>
+    <script type="text/javascript" src="../../../js/main.min.js"></script>
+
+    <script src="../../../js/layuiadmin/layui/layui.js"></script>
+    <script src="../../../js/layuiadmin/common.js"></script>
+    <script type="text/javascript">
+        layui.config({
+            base: '../../../js/layuiadmin/' //静态资源所在路径
+        }).use(['index', 'table', 'laydate'], function () {
+            var admin = layui.admin
+                , laydate = layui.laydate
+                , table = layui.table;
+
+            table.render({
+                elem: '#test-table-height'
+                , url: layui.setter.base + 'json/table/demo.js'
+                , height: 'full-350'
+                , cellMinWidth: 80
+                , page: true
+                , limit: 30
+                , cols: [[
+                    // { type: 'checkbox', fixed: 'left' }
+                    { field: 'username', title: '庭审编号', align: 'left' }
+                    , {
+                        field: 'email', title: '庭审时间', width: 150, align: 'center', templet: function (res) {
+                            return '<em>' + res.email + '</em>'
+                        }
+                    }
+                    , { field: 'sex', title: '案件名称', width: 180, sort: true, align: 'center' }
+                    , { field: 'city', title: '立案时间', width: 140 }
+                    , { field: 'sign', title: '案件类型', width: 120 }
+                    , { field: 'sign', title: '承办部门', width: 120 }
+                    , { field: 'sign', title: '当事人信息', width: 120 }
+                    , { field: 'sign', title: '案由描述', width: 120 }
+                    , { field: 'experience', title: '点播次数', width: 120, sort: true, align: 'center' }
+                    , { fixed: 'right', title: '操作', toolbar: '#table-toolbar', width: 120, align: 'center' }
+                ]]
+                , page: true
+            });
+
+            //日期时间选择器
+            laydate.render({
+                elem: '#time1'
+                , type: 'datetime'
+            });
+            laydate.render({
+                elem: '#time2'
+                , type: 'datetime'
+            });
+
+            //监听行工具事件
+            table.on('tool(table-toolbar)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    // var iframeObj = $(window.frameElement).attr('name');
+                    // page("新增", "add.html", iframeObj, "520", "500");
+                    location.href = 'detail.html'
+
+                } else if (obj.event == 'views') {
+                    $.confirm({
+                        title: '提醒',
+                        content: '确认下载吗？',
+                        type: 'green',
+                        buttons: {
+                            omg: {
+                                text: '确认',
+                                btnClass: 'btn-green',
+                                action: function () {
+                                    // $.alert('你点击了确认!');
+                                    // var loading = layer.load('备份中...', {
+                                    //     icon: 16, shade: [0.8, '#000'] //0.1透明度的白色背景
+                                    // });
+                                    // setTimeout(function (data) {
+                                    //     //最后数据加载完 让 loading层消失
+                                    //     layer.close(loading);
+                                    // }, 5000);
+                                    lightyear.loading('show');
+                                    // 假设ajax提交操作
+                                    setTimeout(function () {
+                                        lightyear.loading('hide');
+                                        lightyear.notify('下载成功，页面即将自动跳转~', 'success', 5000);
+                                    }, 1e3)
+                                }
+                            },
+                            close: {
+                                text: '取消',
+                            }
+                        }
+                    });
+                }
+            });
+
+        });
+        function daochu() {
+            $.confirm({
+                        title: '提醒',
+                        content: '确认导出吗？',
+                        type: 'green',
+                        buttons: {
+                            omg: {
+                                text: '确认',
+                                btnClass: 'btn-green',
+                                action: function () {
+                                    // $.alert('你点击了确认!');
+                                    // var loading = layer.load('备份中...', {
+                                    //     icon: 16, shade: [0.8, '#000'] //0.1透明度的白色背景
+                                    // });
+                                    // setTimeout(function (data) {
+                                    //     //最后数据加载完 让 loading层消失
+                                    //     layer.close(loading);
+                                    // }, 5000);
+                                    lightyear.loading('show');
+                                    // 假设ajax提交操作
+                                    setTimeout(function () {
+                                        lightyear.loading('hide');
+                                        lightyear.notify('导出成功，页面即将自动跳转~', 'success', 5000);
+                                    }, 1e3)
+                                }
+                            },
+                            close: {
+                                text: '取消',
+                            }
+                        }
+                    });
+        }
+       
+    </script>
+</body>
+
+</html>
